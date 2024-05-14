@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3c68d675-789d-4d63-bc65-a053e8ad0243">
+	<property name="ireport.zoom" value="1.7715610000000017"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="anio" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="mes" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="semana" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     SUM(Detalle_Preparacion."cantidad") AS Detalle_Preparacion_cantidad,
+     Producto."descripcion" AS Producto_descripcion,
+     Unidades_Medidas."abreviacion" AS Unidades_Medidas_abreviacion,
+     Marca."nombre" AS Marca_nombre,
+     Categoria."nombre" AS Categoria_nombre,
+     Producto."cantidad" AS Producto_cantidad
+FROM
+     "dbo"."Preparacion_Alimento" Preparacion_Alimento 
+     INNER JOIN "dbo"."Detalle_Preparacion" Detalle_Preparacion ON Preparacion_Alimento."id" = Detalle_Preparacion."idPreparacionAlimento"
+     INNER JOIN "dbo"."Producto" Producto ON Detalle_Preparacion."idProducto" = Producto."id"
+     INNER JOIN "dbo"."Unidades_Medidas" Unidades_Medidas ON Producto."idUnidadMedida" = Unidades_Medidas."id"
+     INNER JOIN "dbo"."Marca" Marca ON Producto."idMarca" = Marca."id"
+     INNER JOIN "dbo"."Categoria" Categoria ON Producto."idCategoria" = Categoria."id"
+WHERE 
+    Preparacion_Alimento.estado = 1 
+    AND DATEPART(YEAR, fecha) = $P{anio}
+    AND DATEPART(MONTH, fecha) = $P{mes}
+    AND ( 
+        CASE 
+            WHEN DATEPART(DAY, fecha) <= 7 THEN 1
+            WHEN DATEPART(DAY, fecha) <= 14 THEN 2
+            WHEN DATEPART(DAY, fecha) <= 21 THEN 3
+            ELSE 4
+        END
+    ) = $P{semana}
+GROUP BY 
+     Producto."descripcion",
+     Unidades_Medidas."abreviacion",
+     Marca."nombre",
+     Categoria."nombre",
+     Producto."cantidad"
+ORDER BY 
+     Producto_descripcion;]]>
+	</queryString>
+	<field name="Detalle_Preparacion_cantidad" class="java.lang.Integer"/>
+	<field name="Producto_descripcion" class="java.lang.String"/>
+	<field name="Unidades_Medidas_abreviacion" class="java.lang.String"/>
+	<field name="Marca_nombre" class="java.lang.String"/>
+	<field name="Categoria_nombre" class="java.lang.String"/>
+	<field name="Producto_cantidad" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="11" width="572" height="20" uuid="c639619b-8238-44f7-872a-02f828787da6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE SEMANAL DE ALIMENTOS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="571" height="20" backcolor="#CCCCCC" uuid="9f836082-a521-4ffa-ac89-e959243dbbab"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="224" height="20" uuid="03de4b6e-530d-4b40-b1e9-392adf354be7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="255" y="0" width="71" height="20" uuid="56c2b918-91cd-4da6-9967-e30c908fb6ef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MARCA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="327" y="0" width="82" height="20" uuid="9dfd2978-e496-4add-ab64-11594b98d1ef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CATEGORÍA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="0" width="60" height="20" uuid="a2514284-c334-4304-83dc-d2615271c917"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CANTIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="225" y="0" width="29" height="20" uuid="8f466b5c-7d35-4f79-a9cd-4c5c0b3d127b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UND]]></text>
+			</staticText>
+			<line>
+				<reportElement x="470" y="0" width="1" height="20" uuid="85348095-099b-4ad6-91ff-9791587e1d9d"/>
+			</line>
+			<line>
+				<reportElement x="409" y="0" width="1" height="20" uuid="35a65768-c7a5-40d0-8fe5-bb464bfda7a3"/>
+			</line>
+			<line>
+				<reportElement x="224" y="0" width="1" height="20" uuid="6e61d1c1-41c1-433f-b1df-30e65e506d7b"/>
+			</line>
+			<line>
+				<reportElement x="326" y="0" width="1" height="20" uuid="47211892-19b5-4a4b-b786-8b8545dc31da"/>
+			</line>
+			<line>
+				<reportElement x="254" y="0" width="1" height="20" uuid="78426a2e-dc3b-4ed4-9109-d6d94a163ecb"/>
+			</line>
+			<staticText>
+				<reportElement x="471" y="0" width="100" height="20" uuid="74ed5129-ac1c-49ca-a0bd-b6613a307da6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[STOCK DISPONIBLE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="571" height="20" uuid="1d1ef89d-bb35-4e5d-a198-81bae57a6725"/>
+			</rectangle>
+			<textField>
+				<reportElement x="5" y="0" width="214" height="20" uuid="ba410f27-d490-4204-b10e-e7dfb4391707"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Producto_descripcion}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="409" y="0" width="1" height="20" uuid="c4613ab6-fef7-4467-ac52-22597a9b0696"/>
+			</line>
+			<line>
+				<reportElement x="224" y="0" width="1" height="20" uuid="352ca177-210c-4672-aff7-4c80cf5ed1a4"/>
+			</line>
+			<line>
+				<reportElement x="326" y="0" width="1" height="20" uuid="ed0e5d00-e4a2-4e67-a5d9-ac04069110e9"/>
+			</line>
+			<line>
+				<reportElement x="254" y="0" width="1" height="20" uuid="f5fd62de-9ba9-45d6-b622-bdc2a7ba71aa"/>
+			</line>
+			<textField>
+				<reportElement x="225" y="0" width="29" height="20" uuid="68f45899-6e20-472d-8a7a-9321835e19d3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Unidades_Medidas_abreviacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="255" y="0" width="71" height="20" uuid="1afc73f2-ae8d-48ae-8543-425e271e1ab3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Marca_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="327" y="0" width="82" height="20" uuid="d2894add-9a19-4442-9256-384d99755222"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Categoria_nombre}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="470" y="0" width="1" height="20" uuid="aa9477c7-8123-4494-b315-54e27f11bb9a"/>
+			</line>
+			<textField>
+				<reportElement x="471" y="0" width="100" height="20" uuid="e0b94c91-931f-4ff5-a7cd-7d35c8f013ac"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Producto_cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="0" width="60" height="20" uuid="20369ffc-2ad9-4610-b7ed-680de6fff6ce"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Detalle_Preparacion_cantidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="174" height="20" uuid="2b9fdd0c-23fb-43b2-8ee3-d2e0e8a72b31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("EEEE, dd 'de' MMMM 'de' yyyy").format(new java.util.Date()).toString().toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="530" y="0" width="41" height="20" uuid="1bca362c-6da0-4142-9df4-ddc0a35cce52"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="0" width="100" height="20" uuid="0138c7db-225c-4fd4-8acb-db312287cd3f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Pag "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
